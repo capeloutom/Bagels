@@ -7,7 +7,7 @@ def Rules():
 	the guess has no correct numbers, the person who made the number will say bagel, if it has a \
 	correct digit but in the wrong spot they will say Pico, and a correct digit in the right spot \
 	they will say Fermi.  Always say any Picos before Firmis.  The guesser will keep attempting to \
-	guess numbers until a correct number is found.")
+	guess numbers until a correct number is found. TEST")
 
 def startGame():
 	gamemode = input("Would you like to be the player guessing the number or creating the number? \
