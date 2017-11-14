@@ -1,0 +1,54 @@
+3,0,2
+
+0,3,2 (pico, pico, firmi)
+3,0,2 (victory)
+0,2,3 (pico, pico, pico)
+2,3,0 (pico, pico, pico)
+
+
+
+3,0,1
+
+3,0,7 (fermi,fermi)
+increment first number by next highest number avaliable in remaining pool (for this remaining pool is everything but other digits being guessed)
+
+3,0,7(fermi)
+if it is single firmi than go back and do process with second digit
+
+if double fermi keep incrementing same digit until you win
+
+if fermi pico
+go back and change different digit to what you just changed
+
+
+
+pico pico
+
+3,0,2
+
+2,7,3 (pico,pico)
+brute force swaps until fermi fermi
+
+pico
+
+increment first number
+if still pico
+keep incrementing
+if not pico swamp back and increment second
+
+gets you to pico pico execute that
+
+
+pico fermi
+3,0,2
+
+0,7,2 (pico, fermi)
+brute force swaps until you get fermi fermi than do fermi fermi code
+
+
+fermi
+same thing as pico until you get pico fermi or fermi fermi
+
+
+
+
