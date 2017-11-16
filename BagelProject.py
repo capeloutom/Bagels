@@ -1,16 +1,17 @@
 import random
 
-digits = ["0","1","2","3","4","5","6","7","8","9"] #list of digits 
-
+stringdigits = ["0","1","2","3","4","5","6","7","8","9"] #list of digits 
+digits = [0,1,2,3,4,5,6,7,8,9]
+FermiIndex = 0
 
 def Rules():
 	print("The game will begin with you either choosing to be the guesser or the one \
 generating the number.  The person generating the number will choose a 3 digit number with no \
 repeated digits.  The person guessing will then attempt to guess that 3 digit number.  If \
-the guess has no correct numbers, the person who made the number will say bagel, if it has a \
-correct digit but in the wrong spot they will say Pico, and a correct digit in the right spot \
-they will say Fermi.  Always say any Picos before Firmis.  The guesser will keep attempting to \
-guess numbers until a correct number is found.\n")
+the guess has no correct numbers, the person who made the number will say bagel. If it has a \
+correct digit but in the wrong spot they will say Pico for each of those digits. If it has a correct digit\
+in the right spot they will say Fermi for each digit.  Always say any Picos before Firmis.  The guesser will \
+keep attempting to guess numbers until a correct number is found.\n")
 
 def startGame():
 	gamemode = 0
@@ -23,18 +24,21 @@ Please input 'Guessing' or 'Creating'\n " )
 	return gamemode
 
 def generateNum():
-	number1 = random.randint(1,9) 
+	number1 = digits[random.randint(1,len(digits)-1)] 
 	number2 = 90
 	while number2 == 90:
-		possible2 = random.randint(0,9)
+		possible2 = digits[random.randint(0,len(digits)-1)]
 		if possible2 != number1:
 			number2 = possible2
 	number3 = 90
 	while number3 == 90:
-		possible3 = random.randint(0,9)
+		possible3 = digits[random.randint(0,len(digits)-1)]
 		if possible3 != number1 and possible3 != number2:
 			number3 = possible3
 	numtoGuess = [number1, number2, number3]
+	digits.remove(number1)
+	digits.remove(number2)
+	digits.remove(number3)
 	return numtoGuess
 
 def guessing(numtoGuess):
@@ -49,8 +53,8 @@ def guessing(numtoGuess):
 			guessString = input("Guess a 3 digit number with no spaces in between numbers and no repeats: ")
 			print()
 			#check for characters other than number in guess
-			while guessString[0] not in digits \
-			or guessString[1] not in digits or guessString[2] not in digits:
+			while guessString[0] not in stringdigits \
+			or guessString[1] not in stringdigits or guessString[2] not in stringdigits:
 				print("please make a guess using only the numbers 0-9\n")
 				guessString = input("Guess a 3 digit number with no spaces in between numbers and no repeats: ")
 				print()
@@ -88,7 +92,85 @@ def guessing(numtoGuess):
 		print(response,"\n")
 	print("Congradulations, you guessed the correct number!")
 
-def triplePico(guess): #if guess by computer is responded by pico pico pico
+def PicoFermi(guess):
+
+	guess[0], guess[1] = guess[1], guess[0] #try swapping first two numbers
+	print(guess)
+	answer = input("Please input response \n")
+	print()
+
+	if answer != "Fermi Fermi":
+		guess[0], guess[1] = guess[1], guess[0] #if that doesn't work swap back try next swap
+		guess[0], guess[2] = guess[2], guess[0]
+		print(guess)
+		answer = input("Please input response \n")
+		print()
+
+		if answer != "Fermi Fermi":
+			guess[0], guess[2] = guess[2], guess[0] #if that didn't work swamp back try next swamp
+			guess[1], guess[2] = guess[2], guess[1]
+
+
+	return guess, answer
+
+def FermiFermi(guess):
+	global FermiIndex
+	temp = guess[FermiIndex]
+
+
+
+	guess[FermiIndex] = digits[0]
+	digits.remove(guess[FermiIndex])
+	print(guess)
+	answer = input("Please input response \n")
+	print()
+	
+	if answer == "Pico Fermi":
+		lastDigit = guess[FermiIndex]
+		guess[FermiIndex] = temp
+		temp = guess[FermiIndex]
+		FermiIndex += 1
+		temp = guess[FermiIndex]
+		guess[FermiIndex] = lastDigit
+		print(guess)
+		answer = input("Please input response \n")
+		print()
+
+		if answer != "Fermi Fermi Fermi":
+			guess[FermiIndex] = temp
+			FermiIndex += 1
+			guess[FermiIndex] = lastDigit
+			print(guess)
+			answer = input("Please input response \n")
+			print()
+
+
+	if answer == "Fermi":
+		guess[FermiIndex] = temp
+		FermiIndex += 1
+		temp = guess[FermiIndex]
+		guess[FermiIndex] = digits[0]
+		digits.remove(guess[FermiIndex])
+		print(guess)
+		answer = input("Please input response\n")
+		print()
+
+
+		if answer == "Fermi":
+			guess[FermiIndex] = temp
+			FermiIndex += 1
+			guess[FermiIndex] = digits[0]
+			digits.remove(guess[FermiIndex])
+			print(guess)
+			answer = input("Please input response\n")
+			print()
+
+
+	return guess, answer
+
+
+
+def TriplePico(guess): #if guess by computer is responded by pico pico pico
 	 #from here computer will guess different combinations till it wins
 	guess[0], guess[1], guess[2] = guess[1], guess[2], guess[0]
 	print(guess)
@@ -100,26 +182,8 @@ def triplePico(guess): #if guess by computer is responded by pico pico pico
 		print(guess)
 		answer = input("Please input response \n")
 		print()
-		if answer != "Fermi Fermi Fermi":
-			guess[0], guess[1], guess[2] = guess[1], guess[2], guess[0]
-			print(guess)
-			answer = input("Please input response \n")
-			print()
-			if answer != "Fermi Fermi Fermi":
-				guess[0], guess[2] = guess[2], guess[0]
-				print(guess)
-				answer = input("Please input response \n")
-				print()
-				if answer != "Fermi Fermi Fermi":
-					guess[0], guess[1], guess[2] = guess[1], guess[2], guess[0]
-					print(guess)
-					answer = input("Please input response \n")
-					print()
-					if answer != "Fermi Fermi Fermi":		
-						guess[0], guess[1], guess[2] = guess[1], guess[2], guess[0]
-						print(guess)
-						answer = input("Please input response \n")
-						print()
+		
+
 	return guess, answer
 
 def PicoPicoFermi(guess):
@@ -149,18 +213,30 @@ Fermi Pico Bagel, seperating the words by spaces and capitalizing words\n")
 
 	#first guess by computer will be random
 	guess = generateNum()
-	answer = ""
+	print(guess)
+	answer = input("Please input response: \n")	
+	print()
 	while answer != "Fermi Fermi Fermi":
 		
-		print(guess)
-		answer = input("Please input response: \n")	
-		print()
+		if answer == "Bagel":
+			guess = generateNum()
+			print(guess)
+			answer = input("Please input response: \n")	
+			print()
 
-		if answer == "Pico Pico Pico": 
-			guess, answer = triplePico(guess)
+		if answer == "Pico Fermi":
+			guess, answer = PicoFermi(guess)
+			
+		if answer == "Fermi Fermi":
+			guess, answer = FermiFermi(guess)
+
+		elif answer == "Pico Pico Pico": 
+			guess, answer = TriplePico(guess)
 
 		elif answer == "Pico Pico Fermi":
 			guess, answer = PicoPicoFermi(guess)
+
+
 
 		elif answer == "Fermi Fermi Fermi":
 			pass
@@ -175,6 +251,7 @@ Fermi Pico Bagel, seperating the words by spaces and capitalizing words\n")
 	print("Game over, the computer has guessed your number")
 
 def main():
+	#Rules()
 	gamemode = startGame()
 	if gamemode == "Guessing":
 		test = generateNum()
